@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:human_resources/core/constant/App_routes.dart';
-import 'package:human_resources/core/them/app_colors.dart';
-import 'package:human_resources/view/widget/EmployeeInfoCard.dart';
-import 'package:human_resources/view/widget/EnhancedDashboardCard.dart';
+
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});

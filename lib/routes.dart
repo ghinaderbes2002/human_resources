@@ -14,10 +14,10 @@ List<GetPage<dynamic>>? routes = [
   //   name: "/",
   //   page: () => const MainHome(),
   // ),
-  // GetPage(name: "/", page: () => const Login()),
+  GetPage(name: "/", page: () => const Login()),
 
-  GetPage(name: "/", page: () => const DashboardPage()),
-  // GetPage(name: AppRoute.dashboardPage, page: () => const DashboardPage()),
+  // GetPage(name: "/", page: () => const DashboardPage()),
+  GetPage(name: AppRoute.dashboardPage, page: () => const DashboardPage()),
   GetPage(name: AppRoute.monthlyReport, page: () => const MonthlyReportPage()),
   GetPage(name: AppRoute.transactionScreen, page: () => const TransactionScreen()),
   GetPage(

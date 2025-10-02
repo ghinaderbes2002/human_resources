@@ -106,22 +106,6 @@ class Login extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 12),
 
-                                // // Forgot Password
-                                // Align(
-                                //   alignment: Alignment.centerLeft,
-                                //   child: GestureDetector(
-                                //     child: Text(
-                                //       'نسيت كلمة المرور؟',
-                                //       style: TextStyle(
-                                //         color: AppColors.primary,
-                                //         fontWeight: FontWeight.w500,
-                                //         fontSize: 14,
-                                //       ),
-                                //     ),
-                                //   ),
-                                // ),
-                                // const SizedBox(height: 30),
-
                                 // Login Button
                                 CustomButton(
                                   text: 'تسجيل الدخول',
@@ -136,63 +120,6 @@ class Login extends StatelessWidget {
                       ),
 
                       const SizedBox(height: 30),
-
-                      // Sign Up Section
-                      // Container(
-                      //   padding: const EdgeInsets.symmetric(
-                      //     horizontal: 20,
-                      //     vertical: 15,
-                      //   ),
-                      //   decoration: BoxDecoration(
-                      //     color: Colors.white,
-                      //     borderRadius: BorderRadius.circular(15),
-                      //     boxShadow: [
-                      //       BoxShadow(
-                      //         color: Colors.black.withOpacity(0.05),
-                      //         spreadRadius: 1,
-                      //         blurRadius: 10,
-                      //         offset: const Offset(0, 2),
-                      //       ),
-                      //     ],
-                      //   ),
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.center,
-                      //     children: [
-                      //       Text(
-                      //         "ليس لديك حساب؟",
-                      //         style: TextStyle(
-                      //           fontSize: 15,
-                      //           color: Colors.grey[600],
-                      //         ),
-                      //       ),
-                      //       const SizedBox(width: 8),
-                      //       GestureDetector(
-                      //         onTap: () => Get.offAllNamed(AppRoute.signup),
-                      //         child: Row(
-                      //           mainAxisSize: MainAxisSize.min,
-                      //           children: [
-                      //             Text(
-                      //               "إنشاء حساب",
-                      //               style: TextStyle(
-                      //                 color: AppColors.primary,
-                      //                 fontWeight: FontWeight.bold,
-                      //                 fontSize: 15,
-                      //               ),
-                      //             ),
-                      //             const SizedBox(width: 6),
-                      //             Icon(
-                      //               Icons.person_add,
-                      //               size: 18,
-                      //               color: AppColors.primary,
-                      //             ),
-                      //           ],
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-
-                      const SizedBox(height: 40),
                     ],
                   ),
                 ),
