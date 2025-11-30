@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:human_resources/controller/auth/login_controller.dart';
+import 'package:human_resources/core/classes/staterequest.dart';
 import 'package:human_resources/core/function/validinput.dart';
 import 'package:human_resources/core/them/app_colors.dart';
 import 'package:human_resources/view/widget/auth/CustomButton.dart';
@@ -12,7 +13,7 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(LoginControllerImp());
+    final controller = Get.put(LoginControllerImp());
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -20,7 +21,7 @@ class Login extends StatelessWidget {
         backgroundColor: Colors.grey[50],
         body: SafeArea(
           child: GetBuilder<LoginControllerImp>(
-            builder: (controller) {
+            builder: (_) {
               return SingleChildScrollView(
                 child: Container(
                   padding: const EdgeInsets.all(20.0),
@@ -29,7 +30,7 @@ class Login extends StatelessWidget {
                     children: [
                       const SizedBox(height: 30),
 
-                      // Logo Section
+                      // Logo
                       const Logo(),
                       const SizedBox(height: 10),
 
@@ -55,7 +56,7 @@ class Login extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Card Header
+                                // Header
                                 Center(
                                   child: Column(
                                     children: [
@@ -81,7 +82,7 @@ class Login extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 40),
 
-                                // Form Fields
+                                // Username Field
                                 CustomTextFormField(
                                   controller: controller.username,
                                   label: ' الاسم الكامل ',
@@ -93,6 +94,7 @@ class Login extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 20),
 
+                                // Password Field
                                 CustomTextFormField(
                                   controller: controller.password,
                                   label: "كلمة المرور",
@@ -101,18 +103,19 @@ class Login extends StatelessWidget {
                                   isPassword: controller.isPasswordHidden,
                                   onPasswordToggle:
                                       controller.togglePasswordVisibility,
-                                  // validator: controller.validatePassword,
                                   isDarkMode: false,
                                 ),
                                 const SizedBox(height: 12),
 
                                 // Login Button
-                                CustomButton(
+                               CustomButton(
                                   text: 'تسجيل الدخول',
-                                  onPressed: () {
-                                    controller.login();
-                                  },
+                                  onPressed: () => controller.login(),
+                                  isLoading:
+                                      controller.staterequest ==
+                                      Staterequest.loading,
                                 ),
+
                               ],
                             ),
                           ),

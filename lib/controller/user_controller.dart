@@ -11,13 +11,11 @@ class UserController extends GetxController {
   UserModel? user;
   Staterequest staterequest = Staterequest.none;
 
-  get passwordUpdateSuccess => null;
-  
-  
-
+  // متغير للتحكم في Loading زر تحديث كلمة المرور
+  bool isUpdatingPassword = false;
 
   // جلب بيانات مستخدم حسب الـ id
-Future<void> fetchUser(int userId) async {
+  Future<void> fetchUser(int userId) async {
     staterequest = Staterequest.loading;
     update();
 
@@ -36,14 +34,14 @@ Future<void> fetchUser(int userId) async {
     update();
   }
 
-
+  // تحديث كلمة المرور مع Loading
   Future<void> updatePassword({
     required int userId,
     required String oldPassword,
     required String newPassword,
   }) async {
-    staterequest = Staterequest.loading;
-    update();
+    isUpdatingPassword = true;
+    update(); // لتحديث GetBuilder وإظهار الـ loading
 
     final result = await _service.changePassword(
       userId: userId,
@@ -51,8 +49,8 @@ Future<void> fetchUser(int userId) async {
       newPassword: newPassword,
     );
 
-    staterequest = result;
-    update();
+    isUpdatingPassword = false;
+    update(); // لإخفاء الـ loading بعد الانتهاء
 
     if (result == Staterequest.success) {
       Get.snackbar("تم", "تم تغيير كلمة المرور بنجاح");
@@ -62,13 +60,11 @@ Future<void> fetchUser(int userId) async {
   }
 
   Future<void> logout() async {
-    // 1. مسح أي بيانات مستخدم محفوظة
+    // مسح أي بيانات مستخدم محفوظة
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear(); // يحذف كل البيانات المخزنة
 
-    // 2. العودة لصفحة تسجيل الدخول
+    // العودة لصفحة تسجيل الدخول
     Get.offAllNamed(AppRoute.login);
   }
-
 }
-

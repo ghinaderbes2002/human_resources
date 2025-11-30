@@ -9,8 +9,8 @@ class ServerConfig {
   static const String _key = "server_link";
   String _serverLink =
       // "http://38.242.132.87:3001/api"; 
-      //"http://10.90.234.51:5000/api"; 
-      "http://192.168.74.15:3000/api"; 
+      // "http://192.168.74.1:5000/api"; 
+      "http://38.242.132.87:3000/api"; 
 
   String get serverLink => _serverLink;
 

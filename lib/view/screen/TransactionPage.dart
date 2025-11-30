@@ -325,14 +325,45 @@ class _TransactionScreenState extends State<TransactionScreen>
                       ],
                     ),
                     const SizedBox(height: 20),
-                    _buildLabel("عدد الساعات"),
-                    const SizedBox(height: 10),
-                    _buildModernTextField(
-                      controller: hoursControllers[tabIndex]!,
-                      hint: "أدخل عدد الساعات",
-                      keyboardType: TextInputType.number,
-                      prefixIcon: Icons.access_time_rounded,
-                    ),
+
+                    // عدد الساعات محسوبة تلقائيًا
+                    if (startTimes[tabIndex] != null &&
+                        endTimes[tabIndex] != null) ...[
+                      _buildLabel("عدد الساعات"),
+                      const SizedBox(height: 10),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF8F9FA),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: const Color(0xFFE5E7EB),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.access_time_rounded,
+                              color: Color(0xFFE85D4A),
+                              size: 20,
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              "${_calculateHours(startTimes[tabIndex]!, endTimes[tabIndex]!).toStringAsFixed(2)} ساعة",
+                              style: const TextStyle(
+                                fontSize: 15,
+                                color: Color(0xFF1A1A1A),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ],
 
                   const SizedBox(height: 20),
@@ -462,6 +493,13 @@ class _TransactionScreenState extends State<TransactionScreen>
         ],
       ),
     );
+  }
+
+  double _calculateHours(TimeOfDay startTime, TimeOfDay endTime) {
+    final startMinutes = startTime.hour * 60 + startTime.minute;
+    final endMinutes = endTime.hour * 60 + endTime.minute;
+    final diffMinutes = endMinutes - startMinutes;
+    return diffMinutes > 0 ? diffMinutes / 60.0 : 0;
   }
 
   Widget buildAdvanceForm(BuildContext context, int tabIndex) {
@@ -1056,7 +1094,10 @@ class _TransactionScreenState extends State<TransactionScreen>
             "${selectedDates[tabIndex]!.year}-${selectedDates[tabIndex]!.month.toString().padLeft(2, '0')}-${selectedDates[tabIndex]!.day.toString().padLeft(2, '0')}",
         startTime: startTimeStr,
         endTime: endTimeStr,
-        hours: int.tryParse(hoursControllers[tabIndex]!.text.trim()),
+         hours: _calculateHours(
+          startTimes[tabIndex]!, 
+          endTimes[tabIndex]!, 
+        ).toInt(), // 
         reason: reasonControllers[tabIndex]!.text.trim(),
       );
     } else {
@@ -1075,7 +1116,7 @@ class _TransactionScreenState extends State<TransactionScreen>
     });
 
     await controller.fetchTransactions();
-    _showSuccessSnackBar("تم إرسال الطلب بنجاح");
+    // _showSuccessSnackBar("تم إرسال الطلب بنجاح");
   }
 
   Future<void> _submitAdvance(int tabIndex) async {
@@ -1107,7 +1148,7 @@ class _TransactionScreenState extends State<TransactionScreen>
       advanceDates[tabIndex] = null;
     });
 
-    _showSuccessSnackBar("تم إرسال الطلب بنجاح");
+    // _showSuccessSnackBar("تم إرسال الطلب بنجاح");
   }
 
   void _showErrorSnackBar(String message) {
@@ -1128,21 +1169,5 @@ class _TransactionScreenState extends State<TransactionScreen>
     );
   }
 
-  void _showSuccessSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle_outline_rounded, color: Colors.white),
-            const SizedBox(width: 12),
-            Expanded(child: Text(message)),
-          ],
-        ),
-        backgroundColor: const Color(0xFF10B981),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
-      ),
-    );
-  }
+
 }

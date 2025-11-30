@@ -22,7 +22,6 @@ class _DailyFingerprintPageState extends State<DailyFingerprintPage> {
   Future<void> _loadData() async {
     await controller.loadEmployeeId();
     await controller.fetchTodayAttendance();
-    await controller.fetchAttendanceHistory();
   }
 
   String _getCurrentDate() {
@@ -103,8 +102,9 @@ class _DailyFingerprintPageState extends State<DailyFingerprintPage> {
             );
           }
 
-          final canCheckIn = ctrl.todayAttendance?.noAttendance != null;
-          final canCheckOut = ctrl.todayAttendance?.hasAttendance != null;
+          final hasCheckedIn = ctrl.todayAttendance?.hasAttendance != null;
+          final hasCheckedOut =
+              ctrl.todayAttendance?.hasAttendance?.checkOutTime != null;
 
           return RefreshIndicator(
             color: const Color(0xFFE85D4A),
@@ -115,7 +115,7 @@ class _DailyFingerprintPageState extends State<DailyFingerprintPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Date & Time Card
+                  // التاريخ والوقت
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(24),
@@ -173,63 +173,62 @@ class _DailyFingerprintPageState extends State<DailyFingerprintPage> {
 
                   const SizedBox(height: 32),
 
-                  // Action Button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 64,
-                    child: ElevatedButton(
-                      onPressed: ctrl.empId == null
-                          ? null
-                          : () async {
-                              if (canCheckIn) {
-                                await controller.checkIn(ctrl.empId!);
-                              } else if (canCheckOut) {
-                                await controller.checkOut(ctrl.empId!);
-                              }
-                              await controller.fetchTodayAttendance();
-                            },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: canCheckIn
-                            ? const Color(0xFF10B981) // أخضر للدخول
-                            : const Color(0xFFEF4444), // أحمر للخروج
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        shadowColor:
-                            (canCheckIn
-                                    ? const Color(0xFF10B981)
-                                    : const Color(0xFFEF4444))
-                                .withOpacity(0.3),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                  // زر تسجيل الدخول إذا لم يتم الحضور
+                  if (!hasCheckedIn && ctrl.empId != null)
+                    SizedBox(
+                      width: double.infinity,
+                      height: 64,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          await ctrl.checkIn(ctrl.empId!);
+                          await ctrl.fetchTodayAttendance();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF10B981),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+
+                          ),
                         ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            canCheckIn
-                                ? Icons.login_rounded
-                                : Icons.logout_rounded,
-                            size: 28,
+                      child: const Text(
+                          "تسجيل الدخول",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white, // اللون الأبيض
                           ),
-                          const SizedBox(width: 12),
-                          Text(
-                            canCheckIn ? "تسجيل الدخول" : "تسجيل الخروج",
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                        ],
+                        ),
+
                       ),
                     ),
-                  ),
+
+                  // زر تسجيل الخروج إذا سجل الدخول ولم يسجل الخروج بعد
+                  if (hasCheckedIn && !hasCheckedOut && ctrl.empId != null)
+                    SizedBox(
+                      width: double.infinity,
+                      height: 64,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          await ctrl.checkOut(ctrl.empId!);
+                          await ctrl.fetchTodayAttendance();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFEF4444),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        child: const Text(
+                          "تسجيل الخروج",
+                          style: TextStyle(fontSize: 20,
+                              color: Colors.white, // اللون الأبيض
+),
+                        ),
+                      ),
+                    ),
 
                   const SizedBox(height: 32),
 
-                  // جدول أو قائمة سجل الحضور
-                  // استبدل القسم القديم بهذا الكود
+                  // عنوان سجل اليوم
                   Row(
                     children: [
                       Container(
@@ -246,7 +245,7 @@ class _DailyFingerprintPageState extends State<DailyFingerprintPage> {
                       ),
                       const SizedBox(width: 12),
                       const Text(
-                        "سجل الحضور",
+                        "سجل حضور اليوم",
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
@@ -257,231 +256,92 @@ class _DailyFingerprintPageState extends State<DailyFingerprintPage> {
                   ),
                   const SizedBox(height: 16),
 
-                  ctrl.attendanceHistory.isEmpty
-                      ? Container(
-                          padding: const EdgeInsets.all(40),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.04),
-                                blurRadius: 20,
-                                offset: const Offset(0, 4),
+                  // سجل اليوم (الدخول والخروج)
+                  if (hasCheckedIn)
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.04),
+                            blurRadius: 20,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            children: [
+                              const Icon(
+                                Icons.login_rounded,
+                                color: Color(0xFF10B981),
+                                size: 20,
+                              ),
+                              const SizedBox(height: 6),
+                              const Text(
+                                "الدخول",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Color(0xFF9CA3AF),
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                ctrl
+                                        .todayAttendance!
+                                        .hasAttendance!
+                                        .checkInTime ??
+                                    '--',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF10B981),
+                                ),
                               ),
                             ],
                           ),
-                          child: Center(
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: 80,
-                                  height: 80,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFF8F9FA),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: const Icon(
-                                    Icons.access_time_rounded,
-                                    size: 40,
-                                    color: Color(0xFF9CA3AF),
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                const Text(
-                                  "لا توجد سجلات حضور",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Color(0xFF6B7280),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
+                          Container(
+                            width: 1,
+                            height: 40,
+                            color: Colors.grey.shade200,
                           ),
-                        )
-                      : ListView.separated(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: ctrl.attendanceHistory.length,
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(height: 12),
-                          itemBuilder: (context, index) {
-                            final attendance = ctrl.attendanceHistory[index];
-                            return Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.04),
-                                    blurRadius: 20,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
+                          Column(
+                            children: [
+                              const Icon(
+                                Icons.logout_rounded,
+                                color: Color(0xFFEF4444),
+                                size: 20,
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                            gradient: const LinearGradient(
-                                              colors: [
-                                                Color(0xFFE85D4A),
-                                                Color(0xFFFF7A6B),
-                                              ],
-                                            ),
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
-                                          ),
-                                          child: const Icon(
-                                            Icons.fingerprint_rounded,
-                                            color: Colors.white,
-                                            size: 24,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 16),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                attendance.checkInReason ??
-                                                    'دوام',
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Color(0xFF1A1A1A),
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              // Text(
-                                              //   "تاريخ: ${attendance.date ?? '-'}",
-                                              //   style: const TextStyle(
-                                              //     fontSize: 13,
-                                              //     color: Color(0xFF9CA3AF),
-                                              //   ),
-                                              // ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 16),
-                                    const Divider(height: 1),
-                                    const SizedBox(height: 16),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Column(
-                                            children: [
-                                              const Icon(
-                                                Icons.login_rounded,
-                                                color: Color(0xFF10B981),
-                                                size: 20,
-                                              ),
-                                              const SizedBox(height: 6),
-                                              const Text(
-                                                "الدخول",
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Color(0xFF9CA3AF),
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 2),
-                                              Text(
-                                                attendance.checkInTime ?? '---',
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Color(0xFF10B981),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          width: 1,
-                                          height: 40,
-                                          color: Colors.grey.shade200,
-                                        ),
-                                        Expanded(
-                                          child: Column(
-                                            children: [
-                                              const Icon(
-                                                Icons.logout_rounded,
-                                                color: Color(0xFFEF4444),
-                                                size: 20,
-                                              ),
-                                              const SizedBox(height: 6),
-                                              const Text(
-                                                "الخروج",
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Color(0xFF9CA3AF),
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 2),
-                                              Text(
-                                                attendance.checkOutTime ??
-                                                    '---',
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Color(0xFFEF4444),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    // if (attendance.totalHours != null) ...[
-                                    //   const SizedBox(height: 12),
-                                    //   Container(
-                                    //     padding: const EdgeInsets.all(12),
-                                    //     decoration: BoxDecoration(
-                                    //       color: const Color(0xFFF8F9FA),
-                                    //       borderRadius: BorderRadius.circular(
-                                    //         10,
-                                    //       ),
-                                    //     ),
-                                    //     child: Row(
-                                    //       mainAxisAlignment:
-                                    //           MainAxisAlignment.center,
-                                    //       children: [
-                                    //         const Icon(
-                                    //           Icons.access_time_rounded,
-                                    //           color: Color(0xFF6366F1),
-                                    //           size: 18,
-                                    //         ),
-                                    //         const SizedBox(width: 8),
-                                    //         Text(
-                                    //           "إجمالي: ${attendance.totalHours!.toStringAsFixed(2)} ساعة",
-                                    //           style: const TextStyle(
-                                    //             fontSize: 14,
-                                    //             fontWeight: FontWeight.w600,
-                                    //             color: Color(0xFF6366F1),
-                                    //           ),
-                                    //         ),
-                                    //       ],
-                                    //     ),
-                                    //   ),
-                                    // ],
-                                  ],
+                              const SizedBox(height: 6),
+                              const Text(
+                                "الخروج",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Color(0xFF9CA3AF),
                                 ),
                               ),
-                            );
-                          },
-                        ),
+                              const SizedBox(height: 2),
+                              Text(
+                                ctrl
+                                        .todayAttendance!
+                                        .hasAttendance!
+                                        .checkOutTime ??
+                                    '--',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFFEF4444),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                 ],
               ),
             ),

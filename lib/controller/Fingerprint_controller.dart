@@ -1,4 +1,3 @@
-
 import 'package:get/get.dart';
 import 'package:human_resources/core/classes/staterequest.dart';
 import 'package:human_resources/core/services/Fingerprint_service.dart';
@@ -80,27 +79,6 @@ class FingerprintController extends GetxController {
     } else {
       staterequest = Staterequest.failure;
     }
-    update();
-  }
-
-  Future<void> fetchAttendanceHistory() async {
-    if (empId == null) {
-      Get.snackbar("خطأ", "لم يتم العثور على رقم الموظف");
-      return;
-    }
-
-    staterequest = Staterequest.loading;
-    update();
-
-    final result = await _service.getAttendanceByEmployee(empId!);
-
-    if (result.isNotEmpty) {
-      attendanceHistory = result;
-      staterequest = Staterequest.success;
-    } else {
-      staterequest = Staterequest.failure;
-    }
-
     update();
   }
 

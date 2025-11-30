@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:human_resources/controller/auth/login_controller.dart';
 import 'package:human_resources/core/services/SharedPreferences.dart';
 import 'package:human_resources/routes.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-    Get.put(LoginControllerImp(), permanent: true);
 
+  // تحميل الخدمات
   await initialServices();
+  final myServices = await Get.putAsync(() => MyServices().init());
 
-  runApp(const MyApp());
+  bool isLoggedIn = myServices.sharedPref.getBool("isLoggedIn") ?? false;
+
+  runApp(MyApp(isLoggedIn: isLoggedIn));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
+
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: "HR App",
+      initialRoute: isLoggedIn ? AppRoute.dashboardPage : AppRoute.login,
       getPages: routes,
     );
   }

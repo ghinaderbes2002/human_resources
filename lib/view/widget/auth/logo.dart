@@ -15,14 +15,7 @@ class Logo extends StatelessWidget {
           fit: BoxFit.contain, // يحافظ على نسبة الصورة
         ),
         const SizedBox(height: 15),
-        // const Text(
-        //   "ORDERLY",
-        //   style: TextStyle(
-        //     fontSize: 28,
-        //     fontWeight: FontWeight.bold,
-        //     color: AppColors.background,
-        //   ),
-        // ),
+   
       ],
     );
   }

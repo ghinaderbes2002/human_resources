@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:human_resources/core/constant/App_routes.dart';
 
-
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
 
@@ -73,7 +72,7 @@ class _DashboardPageState extends State<DashboardPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  // كارد معلومات الموظف المحدث
+                  // كارد معلومات الموظف بدون أيقونة الإشعارات
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -139,18 +138,7 @@ class _DashboardPageState extends State<DashboardPage> {
                               ],
                             ),
                           ),
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: const Icon(
-                              Icons.notifications_rounded,
-                              color: Colors.white,
-                              size: 24,
-                            ),
-                          ),
+                          // تمت إزالة أيقونة الإشعارات
                         ],
                       ),
                     ),
@@ -241,61 +229,6 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                     ],
                   ),
-
-                  const SizedBox(height: 24),
-
-                  // قسم إحصائيات سريعة
-                  // Row(
-                  //   children: [
-                  //     Container(
-                  //       width: 4,
-                  //       height: 24,
-                  //       decoration: BoxDecoration(
-                  //         gradient: const LinearGradient(
-                  //           colors: [Color(0xFFE85D4A), Color(0xFFFF7A6B)],
-                  //           begin: Alignment.topCenter,
-                  //           end: Alignment.bottomCenter,
-                  //         ),
-                  //         borderRadius: BorderRadius.circular(2),
-                  //       ),
-                  //     ),
-                  //     const SizedBox(width: 12),
-                  //     // const Text(
-                  //     //   "الإحصائيات",
-                  //     //   style: TextStyle(
-                  //     //     fontSize: 20,
-                  //     //     fontWeight: FontWeight.w700,
-                  //     //     color: Color(0xFF1A1A1A),
-                  //     //     letterSpacing: 0.3,
-                  //     //   ),
-                  //     // ),
-                  //   ],
-                  // ),
-                  const SizedBox(height: 16),
-
-                  // Row(
-                  //   children: [
-                  //     Expanded(
-                  //       child: _buildStatCard(
-                  //         title: "الحضور",
-                  //         value: "24",
-                  //         subtitle: "يوم هذا الشهر",
-                  //         icon: Icons.check_circle_rounded,
-                  //         color: const Color(0xFF10B981),
-                  //       ),
-                  //     ),
-                  //     const SizedBox(width: 12),
-                  //     Expanded(
-                  //       child: _buildStatCard(
-                  //         title: "الإجازات",
-                  //         value: "3",
-                  //         subtitle: "أيام متبقية",
-                  //         icon: Icons.event_available_rounded,
-                  //         color: const Color(0xFF6366F1),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
                 ],
               ),
             ),
@@ -365,75 +298,6 @@ class _DashboardPageState extends State<DashboardPage> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildStatCard({
-    required String title,
-    required String value,
-    required String subtitle,
-    required IconData icon,
-    required Color color,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF6B7280),
-                  letterSpacing: 0.2,
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(icon, color: color, size: 18),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w800,
-              color: color,
-              letterSpacing: 0.3,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Color(0xFF9CA3AF),
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
       ),
     );
   }

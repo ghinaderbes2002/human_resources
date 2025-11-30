@@ -82,36 +82,6 @@ class FingerprintService {
   }
 
 
-/// Get Attendance by Employee
-  Future<List<AttendanceModel>> getAttendanceByEmployee(int empId) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('token') ?? '';
-
-      final url = '${ServerConfig().serverLink}/attendances/employee/$empId';
-      print("Get Attendance URL: $url");
-
-      final response = await apiClient.getData(
-        url: url,
-        headers: {"Authorization": "Bearer $token"},
-      );
-
-      print("Get Attendance Status: ${response.statusCode}");
-      print("Get Attendance Data: ${response.data}");
-
-      if (response.statusCode == 200) {
-        final List<dynamic> data = response.data;
-        return data.map((item) => AttendanceModel.fromJson(item)).toList();
-      }
-      return [];
-    } catch (e) {
-      print("Error in getAttendanceByEmployee: $e");
-      Get.snackbar("خطأ", "تعذر جلب سجلات الحضور");
-      return [];
-    }
-  }
-
-
   /// جلب حالة حضور اليوم للموظف
   Future<TodayAttendanceModel?> getTodayAttendance(int empId) async {
     try {

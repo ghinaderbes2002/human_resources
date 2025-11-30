@@ -1,11 +1,18 @@
 import 'package:get/get.dart';
 
 validInput(String val, int min, int max, String type) {
-  if (type == "username") {
-    if (!RegExp(r'^[\u0600-\u06FFa-zA-Z0-9\s]{3,}$').hasMatch(val)) {
-      return "الرجاء إدخال اسم صالح (بالعربية أو الإنجليزية)";
+
+
+
+    if (type == "username") {
+      // يقبل: العربي، الانكليزي، الأرقام، underscore والمسافات
+      if (!RegExp(r'^[\u0600-\u06FFa-zA-Z0-9_\s]+$').hasMatch(val)) {
+        return "الرجاء إدخال اسم صالح (بالعربية أو الإنجليزية)";
+      }
     }
-  }
+
+  
+
 
   if (type == "email") {
     if (!GetUtils.isEmail(val)) {
