@@ -2,6 +2,10 @@
 
 A new Flutter project.
 
+## emulator -list-avds
+
+## emulator -avd note_13_pro_max_API_30
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

@@ -3,6 +3,7 @@ import 'package:human_resources/core/constant/App_routes.dart';
 import 'package:human_resources/view/screen/DailyFingerprintPage.dart';
 import 'package:human_resources/view/screen/DashboardPage.dart';
 import 'package:human_resources/view/screen/MonthlyReportPage.dart';
+import 'package:human_resources/view/screen/MyPerformancePage.dart';
 import 'package:human_resources/view/screen/TransactionPage.dart';
 import 'package:human_resources/view/screen/auth/login.dart';
 import 'package:human_resources/view/screen/profilePage.dart';
@@ -19,5 +20,6 @@ List<GetPage<dynamic>>? routes = [
     name: AppRoute.dailyFingerprint,
     page: () => const DailyFingerprintPage(),
   ),
+  GetPage(name: AppRoute.myPerformance, page: () => const MyPerformancePage()),
   GetPage(name: AppRoute.profile, page: () => const Profilepage()),
 ];

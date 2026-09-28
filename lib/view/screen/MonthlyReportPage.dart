@@ -334,44 +334,7 @@ IconData getStatusIcon(String status) {
                                 ),
                                 const SizedBox(height: 16),
 
-                                GridView.count(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 12,
-                                  mainAxisSpacing: 12,
-                                  childAspectRatio: 1.5,
-                                  children: [
-                                    _buildStatCard(
-                                      title: "حاضر",
-                                      value: report.presentCount,
-                                      icon: Icons.check_circle_rounded,
-                                      color: const Color(0xFF10B981),
-                                    ),
-                                    _buildStatCard(
-                                      title: "غياب",
-                                      value: report.absentCount,
-                                      icon: Icons.cancel_rounded,
-                                      color: const Color(0xFFEF4444),
-                                    ),
-                                    _buildStatCard(
-                                      title: "تأخير",
-                                      value: report.lateCount,
-                                      icon: Icons.schedule_rounded,
-                                      color: const Color(0xFFF59E0B),
-                                    ),
-                                    _buildStatCard(
-                                      title: "إجازة",
-                                      value: report.vacationCount,
-                                      icon: Icons.event_rounded,
-                                      color: const Color(0xFF6366F1),
-                                    ),
-                                  ],
-                                ),
-
-                                const SizedBox(height: 12),
-
-                                // إجمالي ساعات العمل
+// نسبة الحضور الرئيسية
                                 Container(
                                   padding: const EdgeInsets.all(20),
                                   decoration: BoxDecoration(
@@ -386,9 +349,7 @@ IconData getStatusIcon(String status) {
                                     borderRadius: BorderRadius.circular(16),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: const Color(
-                                          0xFFE85D4A,
-                                        ).withOpacity(0.3),
+                                        color: const Color(0xFFE85D4A).withOpacity(0.3),
                                         blurRadius: 20,
                                         offset: const Offset(0, 8),
                                       ),
@@ -400,12 +361,10 @@ IconData getStatusIcon(String status) {
                                         padding: const EdgeInsets.all(14),
                                         decoration: BoxDecoration(
                                           color: Colors.white.withOpacity(0.2),
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
+                                          borderRadius: BorderRadius.circular(12),
                                         ),
                                         child: const Icon(
-                                          Icons.access_time_rounded,
+                                          Icons.trending_up_rounded,
                                           color: Colors.white,
                                           size: 28,
                                         ),
@@ -413,22 +372,193 @@ IconData getStatusIcon(String status) {
                                       const SizedBox(width: 16),
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              "إجمالي ساعات العمل",
+                                              "نسبة الحضور",
                                               style: TextStyle(
-                                                color: Colors.white.withOpacity(
-                                                  0.9,
-                                                ),
+                                                color: Colors.white.withOpacity(0.9),
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w500,
                                               ),
                                             ),
                                             const SizedBox(height: 4),
                                             Text(
-                                              "${report.totalHours.toStringAsFixed(1)} ساعة",
+                                              "${report.attendancePercentage.toStringAsFixed(1)}%",
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 26,
+                                                fontWeight: FontWeight.w800,
+                                                letterSpacing: 0.3,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                const SizedBox(height: 12),
+
+                                // إحصائيات الأيام
+                                GridView.count(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 12,
+                                  mainAxisSpacing: 12,
+                                  childAspectRatio: 1.5,
+                                  children: [
+                                    _buildStatCard(
+                                      title: "أيام الحضور",
+                                      value: report.actualWorkingDays,
+                                      icon: Icons.check_circle_rounded,
+                                      color: const Color(0xFF10B981),
+                                    ),
+                                    _buildStatCard(
+                                      title: "أيام الغياب",
+                                      value: report.absentDays,
+                                      icon: Icons.cancel_rounded,
+                                      color: const Color(0xFFEF4444),
+                                    ),
+                                    _buildStatCard(
+                                      title: "أيام التأخير",
+                                      value: report.lateDays,
+                                      icon: Icons.schedule_rounded,
+                                      color: const Color(0xFFF59E0B),
+                                    ),
+                                    _buildStatCard(
+                                      title: "أيام الإجازة",
+                                      value: report.vacationDays,
+                                      icon: Icons.event_rounded,
+                                      color: const Color(0xFF6366F1),
+                                    ),
+                                    _buildStatCard(
+                                      title: "العمل بأيام الإجازة",
+                                      value: report.holidayWorkDays,
+                                      icon: Icons.work_history_rounded,
+                                      color: const Color(0xFF8B5CF6),
+                                    ),
+                                    _buildStatCard(
+                                      title: "أيام الانصراف المبكر",
+                                      value: report.earlyLeaveDays,
+                                      icon: Icons.exit_to_app_rounded,
+                                      color: const Color(0xFFEC4899),
+                                    ),
+                                  ],
+                                ),
+
+                                const SizedBox(height: 12),
+
+                                // إحصائيات الساعات
+                                _buildSectionTitle("إحصائيات الساعات"),
+                                const SizedBox(height: 12),
+
+                                GridView.count(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 12,
+                                  mainAxisSpacing: 12,
+                                  childAspectRatio: 1.3,
+                                  children: [
+                                    _buildHoursCard(
+                                      title: "الساعات المطلوبة",
+                                      hours: report.requiredWorkHours,
+                                      icon: Icons.calendar_today_rounded,
+                                      color: const Color(0xFF3B82F6),
+                                    ),
+                                    _buildHoursCard(
+                                      title: "الساعات الفعلية",
+                                      hours: report.totalActualWorkHours,
+                                      icon: Icons.access_time_filled_rounded,
+                                      color: const Color(0xFF10B981),
+                                    ),
+                                    _buildHoursCard(
+                                      title: "إجمالي ساعات التأخير",
+                                      hours: report.totalLateHours,
+                                      icon: Icons.timer_off_rounded,
+                                      color: const Color(0xFFF59E0B),
+                                    ),
+                                    _buildHoursCard(
+                                      title: "ساعات الانصراف المبكر",
+                                      hours: report.totalEarlyLeaveHours,
+                                      icon: Icons.logout_rounded,
+                                      color: const Color(0xFFEC4899),
+                                    ),
+                                    _buildHoursCard(
+                                      title: "إجمالي ساعات الإضافي",
+                                      hours: report.totalOvertimeHours,
+                                      icon: Icons.add_circle_rounded,
+                                      color: const Color(0xFF8B5CF6),
+                                    ),
+                                    _buildHoursCard(
+                                      title: "صافي التأخير",
+                                      hours: report.netLate,
+                                      icon: Icons.remove_circle_rounded,
+                                      color: const Color(0xFFEF4444),
+                                      isNegative: true,
+                                    ),
+                                  ],
+                                ),
+
+                                const SizedBox(height: 12),
+
+                                // صافي الإضافي (بارز)
+                                Container(
+                                  padding: const EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: report.netOvertime >= 0
+                                        ? [const Color(0xFF10B981), const Color(0xFF059669)]
+                                        : [const Color(0xFFEF4444), const Color(0xFFDC2626)],
+                                      begin: Alignment.topRight,
+                                      end: Alignment.bottomLeft,
+                                    ),
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: (report.netOvertime >= 0
+                                          ? const Color(0xFF10B981)
+                                          : const Color(0xFFEF4444)).withOpacity(0.3),
+                                        blurRadius: 20,
+                                        offset: const Offset(0, 8),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(14),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withOpacity(0.2),
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        child: Icon(
+                                          report.netOvertime >= 0
+                                            ? Icons.trending_up_rounded
+                                            : Icons.trending_down_rounded,
+                                          color: Colors.white,
+                                          size: 28,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "صافي الإضافي",
+                                              style: TextStyle(
+                                                color: Colors.white.withOpacity(0.9),
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              _formatHours(report.netOvertime.abs()),
                                               style: const TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 26,
@@ -603,6 +733,107 @@ IconData getStatusIcon(String status) {
         ],
       ),
     );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Row(
+      children: [
+        Container(
+          width: 4,
+          height: 24,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [
+                Color(0xFFE85D4A),
+                Color(0xFFFF7A6B),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF1A1A1A),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHoursCard({
+    required String title,
+    required double hours,
+    required IconData icon,
+    required Color color,
+    bool isNegative = false,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF6B7280),
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(7),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(icon, color: color, size: 16),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _formatHours(hours),
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+              color: color,
+              letterSpacing: 0.3,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatHours(double hours) {
+    final int h = hours.floor();
+    final int m = ((hours - h) * 60).round();
+    return "${h}ساعة ${m}دقيقة";
   }
 
   Widget _buildDailyDetails(EmployeeMonthlyReportModel report) {

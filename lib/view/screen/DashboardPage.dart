@@ -194,17 +194,17 @@ class _DashboardPageState extends State<DashboardPage> {
                           Get.toNamed(AppRoute.monthlyReport);
                         },
                       ),
-                      _buildModernServiceCard(
-                        title: "البصمة اليومية",
-                        icon: Icons.fingerprint_rounded,
-                        gradientColors: const [
-                          Color(0xFFF59E0B),
-                          Color(0xFFFBBF24),
-                        ],
-                        onTap: () {
-                          Get.toNamed(AppRoute.dailyFingerprint);
-                        },
-                      ),
+                      // _buildModernServiceCard(
+                      //   title: "البصمة اليومية",
+                      //   icon: Icons.fingerprint_rounded,
+                      //   gradientColors: const [
+                      //     Color(0xFFF59E0B),
+                      //     Color(0xFFFBBF24),
+                      //   ],
+                      //   onTap: () {
+                      //     Get.toNamed(AppRoute.dailyFingerprint);
+                      //   },
+                      // ),
                       _buildModernServiceCard(
                         title: "طلباتي",
                         icon: Icons.assignment_rounded,
@@ -214,6 +214,17 @@ class _DashboardPageState extends State<DashboardPage> {
                         ],
                         onTap: () {
                           Get.toNamed(AppRoute.transactionScreen);
+                        },
+                      ),
+                      _buildModernServiceCard(
+                        title: "تقييمي",
+                        icon: Icons.star_rounded,
+                        gradientColors: const [
+                          Color(0xFFF59E0B),
+                          Color(0xFFFBBF24),
+                        ],
+                        onTap: () {
+                          Get.toNamed(AppRoute.myPerformance);
                         },
                       ),
                       _buildModernServiceCard(

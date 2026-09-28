@@ -4,6 +4,7 @@ class AppRoute {
   static const String monthlyReport = "/MonthlyReportPage";
   static const String transactionScreen = "/TransactionScreen";
   static const String dailyFingerprint = "/DailyFingerprintPage";
+  static const String myPerformance = "/MyPerformancePage";
 
 
   static const String profile = "/profile";
