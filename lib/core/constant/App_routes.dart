@@ -5,6 +5,12 @@ class AppRoute {
   static const String transactionScreen = "/TransactionScreen";
   static const String dailyFingerprint = "/DailyFingerprintPage";
   static const String myPerformance = "/MyPerformancePage";
+  static const String notifications = "/NotificationsPage";
+
+  // شاشات الإدارة (رئيس/نائب فرع أو قسم)
+  static const String attendanceManagement = "/AttendanceManagementPage";
+  static const String employeesManagement = "/EmployeesManagementPage";
+  static const String transactionsManagement = "/TransactionsManagementPage";
 
 
   static const String profile = "/profile";

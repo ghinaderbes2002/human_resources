@@ -1,8 +1,9 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.human_resources">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- إضافة صلاحية الإنترنت -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- صلاحية الإشعارات (أندرويد 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
         android:label="human_resources"
@@ -33,6 +34,11 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!-- قناة الإشعارات الافتراضية لـ Firebase Cloud Messaging -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="hr_notifications" />
     </application>
 
     <queries>

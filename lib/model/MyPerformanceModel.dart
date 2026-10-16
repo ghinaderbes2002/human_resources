@@ -65,7 +65,6 @@ class PerformanceSummary {
   final int totalAttendedDays;
   final double totalScore;
   final double maxPossibleScore;
-  final String? managerComment;
   final bool isFinalized;
 
   PerformanceSummary({
@@ -75,7 +74,6 @@ class PerformanceSummary {
     required this.totalAttendedDays,
     required this.totalScore,
     required this.maxPossibleScore,
-    this.managerComment,
     required this.isFinalized,
   });
 
@@ -87,7 +85,6 @@ class PerformanceSummary {
       totalAttendedDays: json['total_attended_days'] ?? 0,
       totalScore: _toDouble(json['total_score']),
       maxPossibleScore: _toDouble(json['max_possible_score']),
-      managerComment: json['manager_comment'],
       isFinalized: json['is_finalized'] ?? false,
     );
   }

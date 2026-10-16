@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:human_resources/core/classes/staterequest.dart';
 import 'package:human_resources/core/constant/App_routes.dart';
 import 'package:human_resources/core/services/UserService.dart';
+import 'package:human_resources/core/services/push_notification_service.dart';
 import 'package:human_resources/model/UserModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -60,6 +61,9 @@ class UserController extends GetxController {
   }
 
   Future<void> logout() async {
+    // إلغاء تسجيل الجهاز من الإشعارات (قبل حذف التوكن)
+    await PushNotificationService.instance.unregisterDevice();
+
     // مسح أي بيانات مستخدم محفوظة
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear(); // يحذف كل البيانات المخزنة

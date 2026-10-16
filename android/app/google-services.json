@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "729936539572",
+    "project_id": "almohtaseb-hr",
+    "storage_bucket": "almohtaseb-hr.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:729936539572:android:6574a28e921b4e15dd4ce1",
+        "android_client_info": {
+          "package_name": "com.almohtaseb.hr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-xqxpf2CBKzJTEcpfoT4QiVzWc1_GWxQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,6 +4,7 @@ import 'package:human_resources/core/classes/staterequest.dart';
 import 'package:human_resources/core/constant/App_routes.dart';
 import 'package:human_resources/core/services/SharedPreferences.dart';
 import 'package:human_resources/core/services/auth/auth_service.dart';
+import 'package:human_resources/core/services/push_notification_service.dart';
 
 abstract class LoginController extends GetxController {
   login();
@@ -55,6 +56,7 @@ class LoginControllerImp extends LoginController {
 
       if (staterequest == Staterequest.success) {
         await myServices.sharedPref.setBool("isLoggedIn", true);
+        PushNotificationService.instance.registerDevice();
         Get.offAllNamed(
           AppRoute.dashboardPage,
         ); // يروح للداشبورد ويمنع الرجوع للـ Login

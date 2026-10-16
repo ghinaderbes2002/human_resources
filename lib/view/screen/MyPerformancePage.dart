@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:human_resources/controller/performance_controller.dart';
 import 'package:human_resources/core/classes/staterequest.dart';
@@ -183,10 +183,6 @@ class MyPerformancePage extends StatelessWidget {
 
     return [
       if (p.summary != null) _buildSummaryCard(p),
-      if (p.summary?.managerComment?.trim().isNotEmpty == true) ...[
-        const SizedBox(height: 16),
-        _buildManagerComment(p.summary!.managerComment!),
-      ],
       if (p.criteria.isNotEmpty) ...[
         const SizedBox(height: 24),
         _buildSectionTitle("أداؤك حسب المعايير"),
@@ -357,51 +353,6 @@ class MyPerformancePage extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  // ─────────────────────────── ملاحظة المدير ───────────────────────────
-  Widget _buildManagerComment(String comment) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEFF6FF),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFBFDBFE)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Icon(Icons.chat_bubble_outline_rounded,
-              color: Color(0xFF3B82F6), size: 20),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "ملاحظة المدير",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF1E40AF),
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  comment,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF374151),
-                    height: 1.5,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

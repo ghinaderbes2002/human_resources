@@ -17,12 +17,25 @@ class PerformanceController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    // فتح شهر محدد (مثلاً من إشعار اعتماد التقييم)
+    final args = Get.arguments;
+    if (args is Map && args['year'] is int && args['month'] is int) {
+      selectedYear = args['year'];
+      selectedMonth = args['month'];
+    }
     fetchPerformance();
   }
 
   bool get isCurrentMonth {
     final now = DateTime.now();
     return selectedYear == now.year && selectedMonth == now.month;
+  }
+
+  /// فتح شهر محدد (مثلاً من إشعار اعتماد التقييم)
+  void openMonth(int year, int month) {
+    selectedYear = year;
+    selectedMonth = month;
+    fetchPerformance();
   }
 
   void previousMonth() {

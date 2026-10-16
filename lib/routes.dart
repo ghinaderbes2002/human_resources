@@ -4,8 +4,12 @@ import 'package:human_resources/view/screen/DailyFingerprintPage.dart';
 import 'package:human_resources/view/screen/DashboardPage.dart';
 import 'package:human_resources/view/screen/MonthlyReportPage.dart';
 import 'package:human_resources/view/screen/MyPerformancePage.dart';
+import 'package:human_resources/view/screen/NotificationsPage.dart';
 import 'package:human_resources/view/screen/TransactionPage.dart';
 import 'package:human_resources/view/screen/auth/login.dart';
+import 'package:human_resources/view/screen/manager/attendance/AttendanceManagementPage.dart';
+import 'package:human_resources/view/screen/manager/employees/EmployeesManagementPage.dart';
+import 'package:human_resources/view/screen/manager/transactions/TransactionsManagementPage.dart';
 import 'package:human_resources/view/screen/profilePage.dart';
 
 List<GetPage<dynamic>>? routes = [
@@ -21,5 +25,20 @@ List<GetPage<dynamic>>? routes = [
     page: () => const DailyFingerprintPage(),
   ),
   GetPage(name: AppRoute.myPerformance, page: () => const MyPerformancePage()),
+  GetPage(name: AppRoute.notifications, page: () => const NotificationsPage()),
   GetPage(name: AppRoute.profile, page: () => const Profilepage()),
+
+  // شاشات الإدارة
+  GetPage(
+    name: AppRoute.attendanceManagement,
+    page: () => const AttendanceManagementPage(),
+  ),
+  GetPage(
+    name: AppRoute.employeesManagement,
+    page: () => const EmployeesManagementPage(),
+  ),
+  GetPage(
+    name: AppRoute.transactionsManagement,
+    page: () => const TransactionsManagementPage(),
+  ),
 ];
