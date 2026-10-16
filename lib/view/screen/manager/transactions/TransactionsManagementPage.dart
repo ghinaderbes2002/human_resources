@@ -201,7 +201,7 @@ class _PendingTab extends StatelessWidget {
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
-                          'لديك ${c.pending.length} معاملة تحتاج إلى قرارك. الموافقة جماعية: يجب أن يوافق جميع المعنيين، ورفض واحد يرفض المعاملة.',
+                          'لديك ${c.pending.length} معاملة تحتاج إلى قرارك. تُعتمد المعاملة بموافقة جميع المعنيين، ولا تُرفض إلا إذا رفضها الجميع. يمكنك تغيير رأيك لاحقاً من تفاصيل المعاملة طالما هي معلّقة.',
                           style: const TextStyle(fontSize: 12, color: MColors.textMuted),
                         ),
                       ),

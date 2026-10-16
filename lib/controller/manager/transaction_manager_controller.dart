@@ -195,17 +195,34 @@ class TransactionManagerController extends GetxController {
 
   // ============================ الصلاحيات ============================
 
-  /// يُسمح بالموافقة/الرفض فقط إن كان للمستخدم سجل موافقة معلّق
-  bool canAct(TransactionDetail d) {
-    if (d.status != 'pending') return false;
+  /// رأيي على المعاملة: pending / approved / rejected، أو null إن لم أكن من الموافقين
+  String? myVote(TransactionDetail d) {
+    if (d.myApprovalStatus != null) return d.myApprovalStatus;
     final uid = session?.userId;
     if (uid != null) {
       // سجل موافقتي في التفاصيل هو الأدق (قد تكون قائمة الانتظار قديمة)
       final mine = d.approvals.where((a) => a.approver.id == uid);
-      if (mine.isNotEmpty) return mine.any((a) => a.status == 'pending');
+      if (mine.isNotEmpty) return mine.first.status;
     }
-    return isAwaitingMe(d.id);
+    return isAwaitingMe(d.id) ? 'pending' : null;
   }
+
+  /// يمكن إبداء الرأي أو تغييره طالما المعاملة معلّقة:
+  /// الموافقة متاحة لمن لم يوافق بعد (لم يُبدِ رأيه أو رفض سابقاً)
+  bool canApprove(TransactionDetail d) {
+    if (d.status != 'pending') return false;
+    final v = myVote(d);
+    return v == 'pending' || v == 'rejected';
+  }
+
+  /// الرفض متاح لمن لم يرفض بعد (لم يُبدِ رأيه أو وافق سابقاً)
+  bool canReject(TransactionDetail d) {
+    if (d.status != 'pending') return false;
+    final v = myVote(d);
+    return v == 'pending' || v == 'approved';
+  }
+
+  bool canAct(TransactionDetail d) => canApprove(d) || canReject(d);
 
   bool canDelete({required String status, int? requesterId}) {
     if (status == 'approved') return false;

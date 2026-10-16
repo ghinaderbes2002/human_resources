@@ -359,6 +359,9 @@ class TransactionItem {
 
   /// غير متوفر في pending-approvals
   final TxApprovalCounts? approvals;
+
+  /// رأي المستخدم الحالي (pending/approved/rejected) أو null إن لم يكن من الموافقين
+  final String? myApprovalStatus;
   final String? createdAt;
   final String? updatedAt;
   final String? approvedAt;
@@ -375,6 +378,7 @@ class TransactionItem {
     this.notes,
     this.reasonForRejection,
     this.approvals,
+    this.myApprovalStatus,
     this.createdAt,
     this.updatedAt,
     this.approvedAt,
@@ -393,6 +397,7 @@ class TransactionItem {
       notes: _str(j['notes']),
       reasonForRejection: _str(j['reason_for_rejection']),
       approvals: j['approvals'] is Map ? TxApprovalCounts.fromJson(j['approvals']) : null,
+      myApprovalStatus: _str(j['my_approval_status']),
       createdAt: _str(j['created_at']),
       updatedAt: _str(j['updated_at']),
       approvedAt: _str(j['approved_at']),
@@ -491,6 +496,9 @@ class TransactionDetail {
   final String? reasonForRejection;
   final List<TxApprovalEntry> approvals;
   final bool canApprove;
+
+  /// رأي المستخدم الحالي (pending/approved/rejected) أو null إن لم يكن من الموافقين
+  final String? myApprovalStatus;
   final String? createdAt;
   final String? updatedAt;
   final String? approvedAt;
@@ -508,6 +516,7 @@ class TransactionDetail {
     this.reasonForRejection,
     this.approvals = const [],
     this.canApprove = false,
+    this.myApprovalStatus,
     this.createdAt,
     this.updatedAt,
     this.approvedAt,
@@ -530,6 +539,7 @@ class TransactionDetail {
           ? raw.whereType<Map>().map(TxApprovalEntry.fromJson).toList()
           : const [],
       canApprove: j['can_approve'] == true,
+      myApprovalStatus: _str(j['my_approval_status']),
       createdAt: _str(j['created_at']),
       updatedAt: _str(j['updated_at']),
       approvedAt: _str(j['approved_at']),

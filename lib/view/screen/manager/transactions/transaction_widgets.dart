@@ -247,6 +247,11 @@ class TxCard extends StatelessWidget {
                               ],
                             ),
                           if (awaitingMe) const MChip('بانتظار موافقتك', color: MColors.primary),
+                          // رأيي على معاملة ما زالت معلّقة (يمكن تغييره من التفاصيل)
+                          if (!awaitingMe && item.status == 'pending' && item.myApprovalStatus == 'approved')
+                            const MChip('رأيك: موافقة', color: MColors.success),
+                          if (!awaitingMe && item.status == 'pending' && item.myApprovalStatus == 'rejected')
+                            const MChip('رأيك: رفض', color: MColors.danger),
                         ],
                       ),
                     ),
@@ -356,10 +361,12 @@ void _closeSnackbars() {
 }
 
 /// موافقة مع ملاحظات اختيارية. تُرجع true عند النجاح.
-Future<bool> txApproveFlow(TransactionManagerController ctrl, int id) async {
+/// [changingMind]: المستخدم رفض سابقاً ويغيّر رأيه إلى موافقة.
+Future<bool> txApproveFlow(TransactionManagerController ctrl, int id,
+    {bool changingMind = false}) async {
   _closeSnackbars();
   final notes = await MDialogs.prompt(
-    title: 'الموافقة على المعاملة',
+    title: changingMind ? 'تغيير رأيك إلى موافقة' : 'الموافقة على المعاملة',
     label: 'ملاحظات (اختياري)',
     confirmText: 'موافقة',
     confirmColor: MColors.success,
@@ -375,10 +382,13 @@ Future<bool> txApproveFlow(TransactionManagerController ctrl, int id) async {
 }
 
 /// رفض مع سبب إلزامي. تُرجع true عند النجاح.
-Future<bool> txRejectFlow(TransactionManagerController ctrl, int id) async {
+/// لا تُرفض المعاملة نهائياً إلا إذا رفضها جميع المعنيين.
+/// [changingMind]: المستخدم وافق سابقاً ويغيّر رأيه إلى رفض.
+Future<bool> txRejectFlow(TransactionManagerController ctrl, int id,
+    {bool changingMind = false}) async {
   _closeSnackbars();
   final reason = await MDialogs.prompt(
-    title: 'رفض المعاملة',
+    title: changingMind ? 'تغيير رأيك إلى رفض' : 'رفض المعاملة',
     label: 'سبب الرفض',
     required: true,
     confirmText: 'رفض',

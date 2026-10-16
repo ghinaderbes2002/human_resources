@@ -50,12 +50,19 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
     });
   }
 
+  bool get _changingMind {
+    final d = detail;
+    if (d == null) return false;
+    final v = ctrl.myVote(d);
+    return v == 'approved' || v == 'rejected';
+  }
+
   Future<void> _approve() async {
-    if (await txApproveFlow(ctrl, widget.transactionId)) await _load();
+    if (await txApproveFlow(ctrl, widget.transactionId, changingMind: _changingMind)) await _load();
   }
 
   Future<void> _reject() async {
-    if (await txRejectFlow(ctrl, widget.transactionId)) await _load();
+    if (await txRejectFlow(ctrl, widget.transactionId, changingMind: _changingMind)) await _load();
   }
 
   Future<void> _delete() async {
@@ -241,7 +248,7 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
           const Padding(
             padding: EdgeInsets.only(bottom: 8),
             child: Text(
-              'يجب موافقة جميع المعنيين لاعتماد المعاملة، ورفض أي منهم يرفضها.',
+              'تُعتمد المعاملة بموافقة جميع المعنيين، ولا تُرفض إلا إذا رفضها الجميع. يمكن لكل منهم تغيير رأيه طالما المعاملة معلّقة.',
               style: TextStyle(fontSize: 12, color: MColors.textMuted),
             ),
           ),
@@ -262,11 +269,15 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
   }
 
   Widget _actionBar(TransactionManagerController c, TransactionDetail d) {
-    final canAct = c.canAct(d);
+    final canApprove = c.canApprove(d);
+    final canReject = c.canReject(d);
+    final canAct = canApprove || canReject;
     final canDelete = c.canDelete(status: d.status, requesterId: d.requester.id);
     if (!canAct && !canDelete) return const SizedBox.shrink();
     final busy = c.busy;
     final shape = RoundedRectangleBorder(borderRadius: BorderRadius.circular(12));
+    final myVote = c.myVote(d);
+    final changingMind = myVote == 'approved' || myVote == 'rejected';
 
     return Container(
       decoration: BoxDecoration(
@@ -283,89 +294,127 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
         top: false,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-          child: Row(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              if (canAct) ...[
-                Expanded(
-                  child: SizedBox(
-                    height: 48,
-                    child: ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: MColors.success,
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        shape: shape,
+              if (canAct && changingMind)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Row(
+                    children: [
+                      Icon(
+                        myVote == 'approved' ? Icons.check_circle_rounded : Icons.cancel_rounded,
+                        size: 16,
+                        color: myVote == 'approved' ? MColors.success : MColors.danger,
                       ),
-                      onPressed: busy ? null : _approve,
-                      icon: busy
-                          ? const SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(
-                                  strokeWidth: 2, color: Colors.white),
-                            )
-                          : const Icon(Icons.check_rounded),
-                      label: const Text('موافقة',
-                          style: TextStyle(fontWeight: FontWeight.w700)),
-                    ),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          myVote == 'approved'
+                              ? 'لقد وافقت على هذه المعاملة، ويمكنك تغيير رأيك طالما هي معلّقة.'
+                              : 'لقد رفضت هذه المعاملة، ويمكنك تغيير رأيك طالما هي معلّقة.',
+                          style: const TextStyle(fontSize: 12, color: MColors.textMuted),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: SizedBox(
-                    height: 48,
-                    child: OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: MColors.danger,
-                        side: const BorderSide(color: MColors.danger),
-                        shape: shape,
-                      ),
-                      onPressed: busy ? null : _reject,
-                      icon: const Icon(Icons.close_rounded),
-                      label: const Text('رفض', style: TextStyle(fontWeight: FontWeight.w700)),
-                    ),
-                  ),
-                ),
-              ],
-              if (canDelete) ...[
-                if (canAct) const SizedBox(width: 10),
-                canAct
-                    ? SizedBox(
+              Row(
+                children: [
+                  if (canApprove)
+                    Expanded(
+                      child: SizedBox(
                         height: 48,
-                        width: 48,
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: MColors.textMuted,
-                            side: const BorderSide(color: MColors.border),
-                            padding: EdgeInsets.zero,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: MColors.success,
+                            foregroundColor: Colors.white,
+                            elevation: 0,
                             shape: shape,
                           ),
-                          onPressed: busy ? null : _delete,
-                          child: const Icon(Icons.delete_outline_rounded),
-                        ),
-                      )
-                    : Expanded(
-                        child: SizedBox(
-                          height: 48,
-                          child: OutlinedButton.icon(
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: MColors.danger,
-                              side: const BorderSide(color: MColors.danger),
-                              shape: shape,
-                            ),
-                            onPressed: busy ? null : _delete,
-                            icon: const Icon(Icons.delete_outline_rounded),
-                            label: const Text('حذف المعاملة',
-                                style: TextStyle(fontWeight: FontWeight.w700)),
-                          ),
+                          onPressed: busy ? null : _approve,
+                          icon: busy
+                              ? const SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child: CircularProgressIndicator(
+                                      strokeWidth: 2, color: Colors.white),
+                                )
+                              : const Icon(Icons.check_rounded),
+                          label: Text(changingMind ? 'تغيير إلى موافقة' : 'موافقة',
+                              style: const TextStyle(fontWeight: FontWeight.w700)),
                         ),
                       ),
-              ],
+                    ),
+                  if (canApprove && canReject) const SizedBox(width: 10),
+                  if (canReject)
+                    Expanded(
+                      child: SizedBox(
+                        height: 48,
+                        child: OutlinedButton.icon(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: MColors.danger,
+                            side: const BorderSide(color: MColors.danger),
+                            shape: shape,
+                          ),
+                          onPressed: busy ? null : _reject,
+                          icon: const Icon(Icons.close_rounded),
+                          label: Text(changingMind ? 'تغيير إلى رفض' : 'رفض',
+                              style: const TextStyle(fontWeight: FontWeight.w700)),
+                        ),
+                      ),
+                    ),
+                  ..._deleteButton(canAct: canAct, canDelete: canDelete, busy: busy, shape: shape),
+                ],
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  List<Widget> _deleteButton({
+    required bool canAct,
+    required bool canDelete,
+    required bool busy,
+    required OutlinedBorder shape,
+  }) {
+    if (!canDelete) return const [];
+    return [
+      if (canAct) const SizedBox(width: 10),
+      canAct
+          ? SizedBox(
+              height: 48,
+              width: 48,
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: MColors.textMuted,
+                  side: const BorderSide(color: MColors.border),
+                  padding: EdgeInsets.zero,
+                  shape: shape,
+                ),
+                onPressed: busy ? null : _delete,
+                child: const Icon(Icons.delete_outline_rounded),
+              ),
+            )
+          : Expanded(
+              child: SizedBox(
+                height: 48,
+                child: OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: MColors.danger,
+                    side: const BorderSide(color: MColors.danger),
+                    shape: shape,
+                  ),
+                  onPressed: busy ? null : _delete,
+                  icon: const Icon(Icons.delete_outline_rounded),
+                  label: const Text('حذف المعاملة',
+                      style: TextStyle(fontWeight: FontWeight.w700)),
+                ),
+              ),
+            ),
+    ];
   }
 }
 
